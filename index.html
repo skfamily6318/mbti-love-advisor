@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- 基本情報 -->
+  <title>MBTI Love Advisor - あなたの恋愛をサポート</title>
+  <meta name="description" content="MBTIベースの恋愛アドバイスツール。あなたと相手の性格タイプから、相性分析と具体的なアドバイスを無料で提供します。">
+  
+  <!-- OGP設定（これが重要！） -->
+  <meta property="og:title" content="MBTI Love Advisor - あなたの恋愛をサポート">
+  <meta property="og:description" content="MBTIベースの恋愛アドバイスツール。16タイプ対応、完全無料。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://skfamily6318.github.io/mbti-love-advisor/">
+  <meta property="og:image" content="https://skfamily6318.github.io/mbti-love-advisor/ogp-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="MBTI Love Advisor">
+  <meta property="og:locale" content="ja_JP">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MBTI Love Advisor">
+  <meta name="twitter:description" content="MBTIベースの恋愛アドバイスツール">
+  <meta name="twitter:image" content="https://skfamily6318.github.io/mbti-love-advisor/ogp-image.png">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@400;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Merriweather Sans', 'Noto Sans JP', sans-serif;
+      background: linear-gradient(160deg, #ff6b9d 0%, #c06c84 40%, #6c5b7b 70%, #355c7d 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .heart-icon {
+      display: inline-block;
+      margin-bottom: 20px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .heart-icon svg {
+      width: 50px;
+      height: 50px;
+      fill: #fff;
+      filter: drop-shadow(0 4px 20px rgba(255, 107, 157, 0.5));
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 15px 0;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-container, .result-container {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 50px;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
+      animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+
+    .form-group {
+      margin-bottom: 35px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #c06c84;
+      margin-bottom: 15px;
+    }
+
+    label svg {
+      width: 22px;
+      height: 22px;
+      stroke: #c06c84;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 18px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      border: 3px solid #ffd1dc;
+      border-radius: 15px;
+      background-color: #fff;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff6b9d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 20px;
+      padding-right: 45px;
+    }
+
+    textarea {
+      resize: vertical;
+      line-height: 1.6;
+      min-height: 100px;
+    }
+
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: #ff6b9d;
+      box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1);
+    }
+
+    .error {
+      background: #ffe6e6;
+      border: 2px solid #ff6b6b;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 30px;
+      color: #d63031;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      color: #fff;
+      border: none;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(255, 107, 157, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.98);
+      color: #c06c84;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      padding: 16px 50px;
+      font-size: 16px;
+      border-radius: 50px;
+      width: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: #fff;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #ffd1dc;
+    }
+
+    .result-icon {
+      background: linear-gradient(135deg, #ff6b9d, #c06c84);
+      border-radius: 50%;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .result-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: #fff;
+    }
+
+    .result-title h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #c06c84;
+      margin: 0;
+    }
+
+    .result-title p {
+      font-size: 14px;
+      color: #999;
+      margin: 5px 0 0 0;
+      font-weight: 600;
+    }
+
+    .advice-content {
+      font-size: 16px;
+      line-height: 1.9;
+      color: #333;
+      background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), rgba(192, 108, 132, 0.05));
+      padding: 30px;
+      border-radius: 20px;
+      border: 2px solid rgba(255, 107, 157, 0.15);
+      margin-bottom: 25px;
+    }
+
+    .advice-section {
+      margin-bottom: 20px;
+    }
+
+    .advice-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .advice-section h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff6b9d;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .advice-section p {
+      margin-bottom: 10px;
+      line-height: 1.8;
+    }
+
+    .reset-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 15px;
+      }
+      h1 {
+        font-size: 36px;
+      }
+      .form-container, .result-container {
+        padding: 30px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="heart-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </div>
+      <h1>MBTI Love Advisor</h1>
+      <p class="subtitle">あなたの恋愛をサポートします</p>
+    </div>
+
+    <div id="formView" class="form-container">
+      <div class="form-group">
+        <label>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+          あなたのMBTIタイプ *
+        </label>
+        <select id="myType">
+          <option value="">選択してください</option>
+          <option value="INTJ">INTJ - 戦略家</option>
+          <option value="INTP">INTP - 論理学者</option>
+          <option value="ENTJ">ENTJ - 指揮官</option>
+          <option value="ENTP">ENTP - 討論者</option>
+          <option value="INFJ">INFJ - 提唱者</option>
+          <option value="INFP">INFP - 仲介者</option>
+          <option value="ENFJ">ENFJ - 主人公</option>
+          <option value="ENFP">ENFP - 広報運動家</option>
+          <option value="ISTJ">ISTJ - 管理者</option>
+          <option value="ISFJ">ISFJ - 擁護者</option>
+          <option value="ESTJ">ESTJ - 幹部</option>
+          <option value="ESFJ">ESFJ - 領事官</option>
+          <option value="ISTP">ISTP - 巨匠</option>
+          <option value="ISFP">ISFP - 冒険家</option>
+          <option value="ESTP">ESTP - 起業家</option>
+          <option value="ESFP">ESFP - エンターテイナー</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          相手のMBTIタイプ（わかれば）
+        </label>
+        <select id="partnerType">
+          <option value="">不明 / 選択しない</option>
+          <option value="INTJ">INTJ - 戦略家</option>
+          <option value="INTP">INTP - 論理学者</option>
+          <option value="ENTJ">ENTJ - 指揮官</option>
+          <option value="ENTP">ENTP - 討論者</option>
+          <option value="INFJ">INFJ - 提唱者</option>
+          <option value="INFP">INFP - 仲介者</option>
+          <option value="ENFJ">ENFJ - 主人公</option>
+          <option value="ENFP">ENFP - 広報運動家</option>
+          <option value="ISTJ">ISTJ - 管理者</option>
+          <option value="ISFJ">ISFJ - 擁護者</option>
+          <option value="ESTJ">ESTJ - 幹部</option>
+          <option value="ESFJ">ESFJ - 領事官</option>
+          <option value="ISTP">ISTP - 巨匠</option>
+          <option value="ISFP">ISFP - 冒険家</option>
+          <option value="ESTP">ESTP - 起業家</option>
+          <option value="ESFP">ESFP - エンターテイナー</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          悩みのカテゴリー *
+        </label>
+        <select id="concernCategory">
+          <option value="">選択してください</option>
+          <option value="communication">コミュニケーションが取りづらい</option>
+          <option value="values">価値観の違いを感じる</option>
+          <option value="distance">距離感がわからない</option>
+          <option value="future">将来について不安</option>
+          <option value="feelings">相手の気持ちが読めない</option>
+          <option value="conflict">喧嘩が多い・対立しがち</option>
+          <option value="frequency">連絡の頻度が合わない</option>
+          <option value="expression">愛情表現が足りない気がする</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          具体的な状況（任意）
+        </label>
+        <textarea id="concernDetail" placeholder="例：最近LINEの返信が遅くなってきて、冷たく感じます..."></textarea>
+      </div>
+
+      <div id="errorMessage" class="error hidden"></div>
+
+      <button id="submitBtn" class="btn">
+        <span>アドバイスをもらう</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <div id="resultView" class="hidden">
+      <div class="result-container">
+        <div class="result-header">
+          <div class="result-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+          </div>
+          <div class="result-title">
+            <h2>あなたへのアドバイス</h2>
+            <p id="typesLabel"></p>
+          </div>
+        </div>
+        <div id="adviceContent" class="advice-content"></div>
+      </div>
+      <div class="reset-container">
+        <button id="resetBtn" class="btn btn-secondary">もう一度相談する</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const adviceDatabase = {
+      typeCharacteristics: {
+        INTJ: { traits: '論理的で計画的、深い精神的繋がりを重視', communication: '直接的で率直、感情表現は控えめ', needsSpace: true },
+        INTP: { traits: '知的好奇心が強く、独立心が高い', communication: '論理的な議論を好み、感情表現が苦手', needsSpace: true },
+        ENTJ: { traits: '目標志向で決断力がある、リーダーシップを発揮', communication: '率直で効率的、時に支配的になりがち', needsSpace: false },
+        ENTP: { traits: '創造的で議論好き、spontaneousな性格', communication: '知的な刺激を求め、ルーティンを嫌う', needsSpace: false },
+        INFJ: { traits: '理想主義的で共感力が高い、深い絆を求める', communication: '直感的で洞察力があり、献身的', needsSpace: true },
+        INFP: { traits: '純粋で情熱的、理想の愛を追求', communication: '繊細で詩的、衝突を避ける傾向', needsSpace: true },
+        ENFJ: { traits: 'カリスマ的で思いやりがある、調和を重視', communication: '表現豊かで献身的、相手の成長をサポート', needsSpace: false },
+        ENFP: { traits: '情熱的で冒険好き、自由を愛する', communication: '創造的で楽観的、深い感情を持つ', needsSpace: false },
+        ISTJ: { traits: '誠実で責任感が強い、伝統を重視', communication: '実践的で信頼できる、言葉より行動', needsSpace: true },
+        ISFJ: { traits: '献身的で思いやり深い、安定を求める', communication: '細やかな気配りができる、自己犠牲的', needsSpace: true },
+        ESTJ: { traits: '組織的で実直、秩序を重視', communication: '直接的で誠実、時に柔軟性に欠ける', needsSpace: false },
+        ESFJ: { traits: '社交的で世話好き、調和を大切にする', communication: '表現豊かで思いやりがある、承認を求める', needsSpace: false },
+        ISTP: { traits: '独立心が強く実践的、自由を重視', communication: 'クールで冷静、言葉より行動で示す', needsSpace: true },
+        ISFP: { traits: '繊細で創造的、美的センスがある', communication: '静かで優しい、衝突を避ける', needsSpace: true },
+        ESTP: { traits: 'エネルギッシュで大胆、今を楽しむ', communication: '直接的で行動的、spontaneous', needsSpace: false },
+        ESFP: { traits: '明るく社交的、人生を楽しむ', communication: '情熱的で楽観的、注目を求める', needsSpace: false }
+      },
+
+      concernAdvice: {
+        communication: { title: '💬 コミュニケーションの改善', general: 'お互いのコミュニケーションスタイルの違いを理解することが第一歩です。', tips: ['相手の話を最後まで聞き、理解しようとする姿勢を見せる', '自分の気持ちを「私は〜」という主語で伝える（Iメッセージ）', '定期的に二人だけの時間を作り、じっくり話す機会を設ける'] },
+        values: { title: '🎯 価値観の違いへの対処', general: '価値観の違いは成長の機会です。完全に同じである必要はありません。', tips: ['お互いの価値観を尊重し、違いを認め合う', '妥協できる部分と譲れない部分を明確にする', '共通の目標や価値観を見つけ、そこに焦点を当てる'] },
+        distance: { title: '📏 適切な距離感の構築', general: '心地よい距離感は人それぞれ。お互いのペースを尊重することが大切です。', tips: ['相手のパーソナルスペースの必要性を理解する', '一緒にいる時間と一人の時間のバランスを話し合う', '距離があることは愛情がないことではないと理解する'] },
+        future: { title: '🔮 将来への不安の解消', general: '将来について率直に話し合い、お互いのビジョンを共有することが重要です。', tips: ['具体的な将来像について定期的に話し合う', '短期的・長期的な目標を一緒に設定する', '不安な気持ちを正直に伝え、サポートし合う'] },
+        feelings: { title: '💭 相手の気持ちの理解', general: '相手の気持ちは想像だけで判断せず、直接確認することが大切です。', tips: ['「〜だと思う」ではなく「どう思っているの？」と聞く', '相手の行動パターンや愛情表現の仕方を理解する', '非言語コミュニケーション（表情、態度）にも注意を払う'] },
+        conflict: { title: '⚡ 喧嘩・対立の解決', general: '対立は悪いことではありません。建設的に解決する方法を学びましょう。', tips: ['冷却時間を取り、感情的になっている時は距離を置く', '相手を責めるのではなく、問題解決に焦点を当てる', '喧嘩後は必ず話し合い、お互いの気持ちを確認する'] },
+        frequency: { title: '📱 連絡頻度の調整', general: '連絡の頻度は人によって大きく異なります。お互いの期待値を調整しましょう。', tips: ['それぞれの理想的な連絡頻度を率直に伝え合う', '忙しい時期は事前に伝えておく', '連絡の量より質を重視する'] },
+        expression: { title: '💖 愛情表現の違い', general: '愛情表現の方法は人それぞれ。相手の愛情言語を理解することが鍵です。', tips: ['5つの愛情言語（言葉、行動、プレゼント、時間、スキンシップ）を学ぶ', '相手がどの表現で愛を感じるか観察し、確認する', '自分の愛情表現の仕方も相手に伝える'] }
+      }
+    };
+
+    const formView = document.getElementById('formView');
+    const resultView = document.getElementById('resultView');
+    const myTypeSelect = document.getElementById('myType');
+    const partnerTypeSelect = document.getElementById('partnerType');
+    const concernCategorySelect = document.getElementById('concernCategory');
+    const concernDetailTextarea = document.getElementById('concernDetail');
+    const submitBtn = document.getElementById('submitBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const adviceContent = document.getElementById('adviceContent');
+    const typesLabel = document.getElementById('typesLabel');
+
+    submitBtn.addEventListener('click', generateAdvice);
+    resetBtn.addEventListener('click', reset);
+
+    function generateAdvice() {
+      const myType = myTypeSelect.value;
+      const partnerType = partnerTypeSelect.value;
+      const concernCategory = concernCategorySelect.value;
+      const concernDetail = concernDetailTextarea.value.trim();
+
+      if (!myType || !concernCategory) {
+        showError('MBTIタイプと悩みのカテゴリーを選択してください');
+        return;
+      }
+
+      hideError();
+
+      const advice = buildAdvice(myType, partnerType, concernCategory, concernDetail);
+      showResult(myType, partnerType, advice);
+    }
+
+    function buildAdvice(myType, partnerType, concernCategory, concernDetail) {
+      const myTraits = adviceDatabase.typeCharacteristics[myType];
+      const partnerTraits = partnerType ? adviceDatabase.typeCharacteristics[partnerType] : null;
+      const concernInfo = adviceDatabase.concernAdvice[concernCategory];
+
+      let sections = [];
+
+      if (partnerTraits) {
+        const compatibility = analyzeCompatibility(myType, partnerType, myTraits, partnerTraits);
+        sections.push({ title: '💕 相性分析', content: compatibility });
+      }
+
+      sections.push({ title: `✨ ${myType}タイプの恋愛傾向`, content: `${myTraits.traits}。コミュニケーションでは${myTraits.communication}という特徴があります。` });
+      sections.push({ title: concernInfo.title, content: concernInfo.general, tips: concernInfo.tips });
+
+      const practicalAdvice = generatePracticalAdvice(myType, partnerType, concernCategory, myTraits, partnerTraits);
+      sections.push({ title: '🎯 具体的なアクション', content: practicalAdvice });
+
+      return sections;
+    }
+
+    function analyzeCompatibility(myType, partnerType, myTraits, partnerTraits) {
+      const myDimensions = { EI: myType[0], SN: myType[1], TF: myType[2], JP: myType[3] };
+      const partnerDimensions = { EI: partnerType[0], SN: partnerType[1], TF: partnerType[2], JP: partnerType[3] };
+
+      let compatibility = '';
+
+      if (myDimensions.EI !== partnerDimensions.EI) {
+        compatibility += '内向型と外向型の組み合わせは、お互いに新しい視点を与え合える関係です。';
+      } else if (myDimensions.EI === 'I') {
+        compatibility += '両者とも内向型のため、静かで深い関係を築けますが、時には外の世界に一緒に出ることも大切です。';
+      } else {
+        compatibility += '両者とも外向型で、社交的で活発な関係を楽しめますが、二人だけの静かな時間も意識的に作りましょう。';
+      }
+
+      if (myDimensions.TF !== partnerDimensions.TF) {
+        compatibility += '思考型と感情型の組み合わせは、論理と感情のバランスが取れますが、コミュニケーションスタイルの違いに注意が必要です。';
+      }
+
+      return compatibility;
+    }
+
+    function generatePracticalAdvice(myType, partnerType, concernCategory, myTraits, partnerTraits) {
+      let advice = '';
+
+      switch (concernCategory) {
+        case 'communication':
+          if (myTraits.needsSpace) {
+            advice = 'あなたのタイプは一人の時間を必要とします。パートナーにそのことを丁寧に説明し、「距離を置くこと＝愛情がないこと」ではないと理解してもらいましょう。';
+          } else {
+            advice = 'あなたは社交的なタイプです。相手が静かな時間を必要とする場合、それを尊重しつつ、コミュニケーションの質を高めることに焦点を当ててみてください。';
+          }
+          if (partnerType && partnerTraits.needsSpace !== myTraits.needsSpace) {
+            advice += 'お互いのペースが異なるため、「一緒にいる時間」と「一人の時間」のバランスについて話し合うことをお勧めします。';
+          }
+          break;
+
+        case 'distance':
+          advice = myTraits.needsSpace 
+            ? '一人の時間が必要なタイプです。その時間は自分を充電し、より良いパートナーでいるために必要だと伝えましょう。'
+            : '一緒の時間を楽しむタイプです。相手が一人の時間を必要とする場合、それを尊重し、その間に自分の趣味や友人との時間を楽しみましょう。';
+          break;
+
+        case 'expression':
+          if (myType.includes('T')) {
+            advice = '思考型のあなたは、愛情を言葉よりも行動で示す傾向があります。時には「好き」「大切に思っている」と直接言葉で伝えることも試してみてください。';
+          } else {
+            advice = '感情型のあなたは、愛情を言葉で表現することが得意です。ただし相手が思考型の場合、言葉よりも行動や実践的なサポートを愛情と感じる可能性があります。';
+          }
+          break;
+
+        case 'frequency':
+          advice = '連絡頻度は個人差が大きい問題です。「毎日連絡したい」「週に数回で十分」など、お互いの理想を数値化して共有すると良いでしょう。';
+          break;
+
+        default:
+          advice = 'お互いのタイプの特徴を理解し、違いを受け入れることから始めましょう。完璧な関係はありませんが、理解し合う努力が大切です。';
+      }
+
+      return advice;
+    }
+
+    function showResult(myType, partnerType, adviceSections) {
+      typesLabel.textContent = partnerType ? `${myType} × ${partnerType}` : myType;
+      
+      adviceContent.innerHTML = '';
+      
+      adviceSections.forEach(section => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'advice-section';
+        
+        const title = document.createElement('h3');
+        title.textContent = section.title;
+        sectionDiv.appendChild(title);
+        
+        const content = document.createElement('p');
+        content.textContent = section.content;
+        sectionDiv.appendChild(content);
+        
+        if (section.tips) {
+          const ul = document.createElement('ul');
+          ul.style.marginLeft = '20px';
+          ul.style.marginTop = '10px';
+          section.tips.forEach(tip => {
+            const li = document.createElement('li');
+            li.textContent = tip;
+            li.style.marginBottom = '8px';
+            ul.appendChild(li);
+          });
+          sectionDiv.appendChild(ul);
+        }
+        
+        adviceContent.appendChild(sectionDiv);
+      });
+      
+      formView.classList.add('hidden');
+      resultView.classList.remove('hidden');
+    }
+
+    function reset() {
+      myTypeSelect.value = '';
+      partnerTypeSelect.value = '';
+      concernCategorySelect.value = '';
+      concernDetailTextarea.value = '';
+      hideError();
+      resultView.classList.add('hidden');
+      formView.classList.remove('hidden');
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.remove('hidden');
+    }
+
+    function hideError() {
+      errorMessage.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
